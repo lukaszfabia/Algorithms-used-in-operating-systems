@@ -73,9 +73,36 @@ public class ProcessSimulator {
     }
 
     public void rrSimulation(int quantum) {
+        double totalWaitingTime = 0;
+        List<Process> readyQueue = new LinkedList<>();
+        int currentTime = 0;
+        int completed = 0;
 
-        //System.out.printf("%s %.2f %s\n", "Total waiting time for RR: ", (totalWaitingTime), " ms");
-        //System.out.printf("%s %.2f %s\n", "Average waiting time for RR: ", (totalWaitingTime) / processList.size(), " ms");
+        while (completed < processList.size()) {
+            // add any arriving processes to the ready queue
+            for (Process p : processList) {
+                if (p.getArrivalTime() == currentTime) {
+                    readyQueue.add(p);
+                }
+            }
+            readyQueue.sort(Comparator.comparingInt(Process::getArrivalTime).thenComparingInt(Process::getNr));
+            processList.removeAll(readyQueue);
+
+            // run each process in the ready queue for a time quantum
+            for (Process p : readyQueue) {
+                if (p.getRemainingTime() <= quantum) {
+                    p.setRemainingTime(0);
+                    p.setCompletionTime(p.getRemainingTime());
+                    completed++;
+                } else {
+                    p.setRemainingTime(p.getRemainingTime() - quantum);
+                }
+            }
+        }
+
+
+        System.out.printf("%s %.2f %s\n", "Total waiting time for RR: ", (totalWaitingTime), " ms");
+        System.out.printf("%s %.2f %s\n", "Average waiting time for RR: ", (totalWaitingTime) / processList.size(), " ms");
     }
 
     public void srtfSimulation() {
