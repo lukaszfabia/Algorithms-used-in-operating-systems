@@ -2,7 +2,7 @@ package cpuPlanning;
 
 public class Process {
     private int executeTime;
-    private int arrivalTime;
+    private final int arrivalTime;
     private int remainingTime;
     private int waitingTime;
     private int nr;

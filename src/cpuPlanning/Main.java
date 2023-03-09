@@ -8,9 +8,10 @@ public class Main {
         //http://users.pja.edu.pl/~sered/sop/wyklad5/w5.htm
         //https://mycareerwise.com/content/sjf-process-and-examples/content/exam/gate/computer-science
         List<Process> processList = new ArrayList<>();
-        processList.add(new Process(24, 0, 1));
-        processList.add(new Process(3, 1, 2));
-        processList.add(new Process(3, 2, 3));
+        processList.add(new Process(10, 0, 1));
+        processList.add(new Process(9, 1, 2));
+        processList.add(new Process(12, 2, 3));
+        processList.add(new Process(6, 3, 4));
 
 
 
@@ -20,7 +21,14 @@ public class Main {
         ProcessSimulator processSimulator = new ProcessSimulator(processList);
         processSimulator.showData();
 
-        processSimulator.rrSimulation(4);
+        processSimulator.rrSimulation(8);
+        System.out.println();
+        processSimulator.fcfsSimulation();
+        System.out.println();
+        processSimulator.srtfSimulation();
+        System.out.println();
+        System.out.println();
+        processSimulator.sjfSimulation();
 
 
     }
