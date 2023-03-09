@@ -73,71 +73,75 @@ public class ProcessSimulator {
     }
 
     public void rrSimulation(int quantum) {
+        int sum = 0;
+        int count = 0;
+        int delete = processList.size();
+
+        while (delete != 0) {
+            for (Process process : processList) {
+                int temp = process.getRemainingTime();
+
+                if (temp <= quantum && temp > 0) {
+                    sum += temp;
+                    process.setCompletionTime(sum);
+                    process.setRemainingTime(0);
+                    count = 1;
+                } else if (temp > 0) {
+                    process.setRemainingTime(temp - quantum);
+                    sum += quantum;
+                }
+                if (process.getRemainingTime() == 0 && count == 1) {
+                    delete--;
+                    process.setWaitingTime(sum - process.getExecuteTime() - process.getArrivalTime());
+                    count = 0;
+                }
+            }
+        }
+
+        double totalWaitingTime = 0;
+        for (Process process : processList) {
+            totalWaitingTime += process.getWaitingTime();
+        }
+
+        System.out.printf("%s %.2f %s\n", "Total waiting time for RR: ", (totalWaitingTime), " ms");
+        System.out.printf("%s %.2f %s\n", "Average waiting time for RR: ", (totalWaitingTime) / processList.size(), " ms");
+
+    }
+
+    public void srtfSimulation() {
         int currentTime = 0;
-        int completionTime = 0;
-        Queue<Process> readyQueue = new LinkedList<>();
-        while (!processList.isEmpty() || !readyQueue.isEmpty()) {
-            // dodanie procesów, które pojawiły się w międzyczasie
-            while (!processList.isEmpty() && processList.peek().arrivalTime <= currentTime) {
-                readyQueue.offer(processList.poll());
+        int completedProcesses = 0;
+        double totalWaitingTime = 0;
+
+        PriorityQueue<Process> readyQueue = new PriorityQueue<>(Comparator.comparingInt(Process::getRemainingTime).thenComparingInt(Process::getNr));
+
+        while (completedProcesses < processList.size()) {
+            for (Process p : processList) {
+                if (p.getArrivalTime() == currentTime) {
+                    readyQueue.offer(p);
+                }
             }
-            if (readyQueue.isEmpty()) {
-                // brak procesów gotowych do wykonania, przesunięcie czasu
-                currentTime = processList.peek().arrivalTime;
-                continue;
+
+            if (!readyQueue.isEmpty()) {
+                Process p = readyQueue.poll();
+                p.setRemainingTime(p.getRemainingTime() - 1);
+                if (p.getRemainingTime() == 0) {
+                    // process completed
+                    p.setCompletionTime(currentTime + 1);
+                    p.setWaitingTime(p.getCompletionTime() - p.getExecuteTime() - p.getArrivalTime());
+                    totalWaitingTime += p.getWaitingTime();
+                    completedProcesses++;
+                } else {
+                    readyQueue.offer(p);
+                }
             }
-            Process currentProcess = readyQueue.poll();
-            int remainingTime = currentProcess.executionTime - currentProcess.executedTime;
-            int timeToExecute = Math.min(remainingTime, timeQuantum);
-            currentProcess.executedTime += timeToExecute;
-            currentTime += timeToExecute;
-            if (currentProcess.executedTime < currentProcess.executionTime) {
-                // proces nie został zakończony, dodanie go ponownie do kolejki
-                readyQueue.offer(currentProcess);
-            } else {
-                // proces został zakończony, zapisanie czasu zakończenia
-                completionTime = currentTime;
-            }
+
+            currentTime++;
         }
 
-        System.out.println("Czas zakończenia ostatniego procesu: " + completionTime);
-
+        System.out.printf("%s %.2f %s\n", "Total waiting time for SRTF: ", (totalWaitingTime), " ms");
+        System.out.printf("%s %.2f %s\n", "Average waiting time for SRTF: ", (totalWaitingTime) / processList.size(), " ms");
     }
 
-        public void srtfSimulation () {
-            int currentTime = 0;
-            int completedProcesses = 0;
-            double totalWaitingTime = 0;
 
-            PriorityQueue<Process> readyQueue = new PriorityQueue<>(Comparator.comparingInt(Process::getRemainingTime).thenComparingInt(Process::getNr));
-
-            while (completedProcesses < processList.size()) {
-                for (Process p : processList) {
-                    if (p.getArrivalTime() == currentTime) {
-                        readyQueue.offer(p);
-                    }
-                }
-
-                if (!readyQueue.isEmpty()) {
-                    Process p = readyQueue.poll();
-                    p.setRemainingTime(p.getRemainingTime() - 1);
-                    if (p.getRemainingTime() == 0) {
-                        // process completed
-                        p.setCompletionTime(currentTime + 1);
-                        p.setWaitingTime(p.getCompletionTime() - p.getExecuteTime() - p.getArrivalTime());
-                        totalWaitingTime += p.getWaitingTime();
-                        completedProcesses++;
-                    } else {
-                        readyQueue.offer(p);
-                    }
-                }
-
-                currentTime++;
-            }
-
-            System.out.printf("%s %.2f %s\n", "Total waiting time for SRTF: ", (totalWaitingTime), " ms");
-            System.out.printf("%s %.2f %s\n", "Average waiting time for SRTF: ", (totalWaitingTime) / processList.size(), " ms");
-        }
-
-
-    }
+}

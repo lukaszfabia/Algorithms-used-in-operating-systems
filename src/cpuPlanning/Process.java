@@ -7,7 +7,6 @@ public class Process {
     private int waitingTime;
     private int nr;
     private int completionTime;
-    private int executedTime;
 
     public Process(int executeTime, int arrivalTime, int nr) {
         this.executeTime = executeTime;
@@ -15,12 +14,6 @@ public class Process {
         this.nr = nr;
         this.waitingTime = 0;
         this.remainingTime=executeTime;
-    }
-
-    public Process(int executeTime, int arrivalTime, int executedTime){
-        this.executeTime=executeTime;
-        this.arrivalTime=arrivalTime;
-        this.executedTime=executedTime;
     }
 
     public int getCompletionTime() {
@@ -70,17 +63,5 @@ public class Process {
     @Override
     public String toString() {
         return String.format("%-20d %-20d %-20d", getNr(), getArrivalTime(), getExecuteTime());
-    }
-
-    public void execute(int time) {
-        remainingTime -= time;
-    }
-
-    public boolean isCompleted() {
-        return remainingTime == 0;
-    }
-
-    public void reset() {
-        remainingTime = executeTime;
     }
 }
