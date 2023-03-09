@@ -26,6 +26,7 @@ public class ProcessSimulator {
     }
 
     public void showData() {
+        System.out.printf("%-20s %-20s %-20s\n","Number", "Arrival time", "Execute time");
         for (Process process : processList) {
             System.out.println(process);
         }
@@ -39,12 +40,16 @@ public class ProcessSimulator {
         int currentTime = 0;
         double totalWaitingTime = 0;
 
-        for (int i = 0; i < fcfsList.size() - 1; i++) {
-            currentTime += fcfsList.get(i).getExecuteTime();
-            totalWaitingTime += currentTime;
+        for (Process process : fcfsList) {
+            currentTime += process.getExecuteTime();
+            process.setWaitingTime(currentTime-process.getArrivalTime());
+            System.out.println("Process has "+process.getNr()+ " waited: "+process.getWaitingTime()+" ms");
+            totalWaitingTime+=process.getWaitingTime();
         }
-        System.out.printf("%s %.2f %s\n", "Total waiting time: ", (totalWaitingTime - fcfsList.get(0).getArrivalTime()), " ms");
-        System.out.printf("%s %.2f %s\n", "Average waiting time for FCFS: ", (totalWaitingTime - fcfsList.get(0).getArrivalTime()) / getProcesses().size(), "ms");
+
+
+        System.out.printf("%s %.2f %s\n", "Total waiting time for FCFS: ", totalWaitingTime, " ms");
+        System.out.printf("%s %.2f %s\n", "Average waiting time for FCFS: ", totalWaitingTime / getProcesses().size(), "ms");
     }
 
 
@@ -55,7 +60,7 @@ public class ProcessSimulator {
         int time = 0;
         double totalWaitingTime = 0;
         int i = 0;
-
+        System.out.println("SJF:");
         while (!queue.isEmpty() || i < sjfList.size()) {
             if (!queue.isEmpty()) {
                 Process currentProcess = queue.poll();
@@ -105,9 +110,10 @@ public class ProcessSimulator {
         }
 
         double totalWaitingTime = 0;
-
+        System.out.println("Round Robin:");
         for (Process process : rrList) {
             totalWaitingTime += process.getWaitingTime();
+            System.out.println("Process has "+process.getNr()+ " ended: "+process.getWaitingTime()+" ms");
         }
 
         System.out.printf("%s %.2f %s\n", "Total waiting time for RR: ", totalWaitingTime, " ms");
@@ -122,7 +128,7 @@ public class ProcessSimulator {
         double totalWaitingTime = 0;
 
         PriorityQueue<Process> readyQueue = new PriorityQueue<>(Comparator.comparingInt(Process::getRemainingTime).thenComparingInt(Process::getNr));
-
+        System.out.println("SRTF:");
         while (completedProcesses < srtfList.size()) {
             for (Process p : srtfList) {
                 if (p.getArrivalTime() == currentTime) {
@@ -138,12 +144,12 @@ public class ProcessSimulator {
                     p.setCompletionTime(currentTime + 1);
                     p.setWaitingTime(p.getCompletionTime() - p.getExecuteTime() - p.getArrivalTime());
                     totalWaitingTime += p.getWaitingTime();
+                    System.out.println("Process has "+p.getNr()+ " waited: "+p.getWaitingTime()+" ms");
                     completedProcesses++;
                 } else {
                     readyQueue.offer(p);
                 }
             }
-
             currentTime++;
         }
 
