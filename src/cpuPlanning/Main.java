@@ -20,7 +20,7 @@ public class Main {
         ProcessSimulator processSimulator = new ProcessSimulator(processList);
         processSimulator.showData();
 
-        processSimulator.rrSimulation(4);
+        processSimulator.rrSimulation(2);
 
 
     }
