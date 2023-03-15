@@ -1,75 +1,79 @@
 package discPlanning;
 
-import com.sun.source.doctree.SummaryTree;
-
 import java.util.*;
 
 public class Results {
-    private int amountTasks;
-    private int priority;
-    private int cycles;
+    private final int cycles;
+    private final int tasks;
+    private final int priority;
 
-    public Results(int amountTasks, int priority, int cycles) {
-        this.amountTasks = amountTasks;
+    public Results(int cycles, int tasks, int priority) {
         this.priority = priority;
         this.cycles = cycles;
+        this.tasks = tasks;
     }
 
-    public int getAmountTasks() {
-        return amountTasks;
-    }
+    public ArrayList<Result> averageResults() {
 
-    public int getPriority() {
-        return priority;
-    }
+        ArrayList<Result> resultList = new ArrayList<>();
+        ArrayList<Task> randomTasks = new ArrayList<>();
+        ArrayList<Task> randomPriorityTasks = new ArrayList<>();
+        int sum_FCFS_EDF = 0;
+        int sum_FCFS_FD = 0;
+        int sum_SSTF_EDF = 0;
+        int sum_SSTF_FD = 0;
+        int sum_SCAN_EDF = 0;
+        int sum_SCAN_FD = 0;
+        int sum_C_SCAN_EDF = 0;
+        int sum_C_SCAN_FD = 0;
+        for (int j = 0; j < cycles; j++) {
 
-    public int getCycles() {
-        return cycles;
-    }
-
-    private Map<String, Integer> generate(){
-        Random r=new Random();
-        ArrayList<Task> randomTasks=new ArrayList<>();
-        ArrayList<Task> randomPriorityTasks=new ArrayList<>();
-        Map<String, Integer> resultMap=new HashMap<>();
-        int [] sumsOfTurnAround =new int[8];
-        String [] algorithmsNames = {"FCFS EDF", "FCFS FD-SCAN", "SSTF EDF", "SSTF FD-SCAN", "SCAN EDF", "SCAN FD-SCAN","C-SCAN EDF", "C-SCAN FD-SCAN"};
-        for (int i = 0; i < getCycles(); i++) {
-            for (int j = 0; j <getAmountTasks()*(100-getPriority())/100 ; j++) {
-                randomTasks.add(new Task(r.nextInt(500)+1, r.nextInt(200)+1));
+            for (int i = 0; i < tasks * (100 - priority) / 100; i++) {
+                Random r = new Random();
+                int d = 1 + r.nextInt(1000);
+                int m = 1 + r.nextInt(199);
+                randomTasks.add(new Task(d, m));
             }
 
-            for (int j = 0; j <getAmountTasks()*getPriority()/100 ; j++) {
-                randomPriorityTasks.add(new Task(r.nextInt(500)+1, r.nextInt(200)+1, r.nextInt(100)+50));
+            for (int i = 0; i < tasks * priority / 100; i++) {
+                Random r = new Random();
+                int d = 1 + r.nextInt(1000);
+                int m = 1 + r.nextInt(199);
+                int k = 300 + r.nextInt(100);
+                randomPriorityTasks.add(new Task(d, m, k));
             }
+            DiscPlanningAlgorithms pr = new DiscPlanningAlgorithms(randomTasks, randomPriorityTasks);
+            sum_FCFS_EDF += pr.fcfsEdf();
+            sum_FCFS_FD += pr.fcfsFdScan();
+            sum_SSTF_EDF += pr.sstfEdf();
+            sum_SSTF_FD += pr.sstfFdScan();
+            sum_SCAN_EDF += pr.scanEdf();
+            sum_SCAN_FD += pr.scanFdScan();
+            sum_C_SCAN_EDF += pr.cScanEdf();
+            sum_C_SCAN_FD += pr.cScanFdScan();
+            randomTasks.clear();
+            randomPriorityTasks.clear();
 
-            DiscPlanningAlgorithms ds = new DiscPlanningAlgorithms(randomTasks, randomPriorityTasks);
-            /*
-            sumsOfTurnAround[0]+=
-            sumsOfTurnAround[1]+=
-            sumsOfTurnAround[2]+=
-            sumsOfTurnAround[3]+=
-            sumsOfTurnAround[4]+=
-            sumsOfTurnAround[5]+=
-            sumsOfTurnAround[6]+=
-            sumsOfTurnAround[7]+=
-
-             */
         }
 
-        for (int i : sumsOfTurnAround) {
-            resultMap.put(algorithmsNames[i], sumsOfTurnAround[i]);
-        }
+        resultList.add(new Result("FCFS EDF", sum_FCFS_EDF));
+        resultList.add(new Result("FCFS FD-SCAN", sum_FCFS_FD));
+        resultList.add(new Result("SSTF EDF", sum_SSTF_EDF));
+        resultList.add(new Result("SSTF FD-SCAN", sum_SSTF_FD));
+        resultList.add(new Result("SCAN EDF", sum_SCAN_EDF));
+        resultList.add(new Result("SCAN FD-SCAN", sum_SCAN_FD));
+        resultList.add(new Result("C SCAN EDF", sum_C_SCAN_EDF));
+        resultList.add(new Result("C SCAN FD-SCAN", sum_C_SCAN_FD));
 
-        return resultMap;
+        return resultList;
     }
 
-    public String results(Map<String, Integer> restultMap){
-        StringBuilder sb = new StringBuilder();
-        sb.append("Results:");
-        for (Map.Entry<String, Integer> string : restultMap.entrySet()) {
-            sb.append("\n").append(String.format("%-5s, %-5d", string.getKey(), string.getValue()));
+    public void showData() {
+        List<Result> helpList = new ArrayList<>(averageResults());
+        helpList.sort(Comparator.comparing(Result::discMoves));
+
+        for (Result result : helpList) {
+            System.out.println(result);
         }
-        return sb.toString();
     }
 }
