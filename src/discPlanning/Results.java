@@ -51,9 +51,9 @@ public class Results {
             sum_SCAN_FD += pr.scanFdScan();
             sum_C_SCAN_EDF += pr.cScanEdf();
             sum_C_SCAN_FD += pr.cScanFdScan();
+
             randomTasks.clear();
             randomPriorityTasks.clear();
-
         }
 
         resultList.add(new Result("FCFS EDF", sum_FCFS_EDF));

@@ -1,11 +1,11 @@
 package cpuPlanning;
 
 public class Process {
-    private int executeTime;
-    private int arrivalTime;
+    private final int executeTime;
+    private final int arrivalTime;
     private int remainingTime;
     private int waitingTime;
-    private int nr;
+    private final int nr;
     private int completionTime;
 
     public Process(int executeTime, int arrivalTime, int nr) {
@@ -20,24 +20,12 @@ public class Process {
         return completionTime;
     }
 
-    public void setNr(int nr) {
-        this.nr = nr;
-    }
-
     public void setCompletionTime(int completionTime) {
         this.completionTime = completionTime + arrivalTime;
     }
 
     public int getExecuteTime() {
         return executeTime;
-    }
-
-    public void setExecuteTime(int executeTime) {
-        this.executeTime = executeTime;
-    }
-
-    public void setArrivalTime(int arrivalTime) {
-        this.arrivalTime = arrivalTime;
     }
 
     public int getArrivalTime() {
