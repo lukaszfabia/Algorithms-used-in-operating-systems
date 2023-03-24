@@ -8,7 +8,7 @@ public class Main {
         start();
     }
     public static void start(){
-        Results r = new Results(2, 500, 30);
+        Results r = new Results(4, 500, 5);
 
         Scanner scan = new Scanner(System.in);
         System.out.print("Insert a amount of simulations: ");

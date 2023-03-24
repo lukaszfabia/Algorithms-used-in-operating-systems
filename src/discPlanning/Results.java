@@ -30,17 +30,12 @@ public class Results {
 
             for (int i = 0; i < tasks * (100 - priority) / 100; i++) {
                 Random r = new Random();
-                int d = 1 + r.nextInt(1000);
-                int m = 1 + r.nextInt(199);
-                randomTasks.add(new Task(d, m));
+                randomTasks.add(new Task(r.nextInt(500)+1,  r.nextInt(199)+1));
             }
 
             for (int i = 0; i < tasks * priority / 100; i++) {
                 Random r = new Random();
-                int d = 1 + r.nextInt(1000);
-                int m = 1 + r.nextInt(199);
-                int k = 300 + r.nextInt(100);
-                randomPriorityTasks.add(new Task(d, m, k));
+                randomPriorityTasks.add(new Task(r.nextInt(500)+1, r.nextInt(199)+1, r.nextInt(100)+300));
             }
             DiscPlanningAlgorithms pr = new DiscPlanningAlgorithms(randomTasks, randomPriorityTasks);
             sum_FCFS_EDF += pr.fcfsEdf();
