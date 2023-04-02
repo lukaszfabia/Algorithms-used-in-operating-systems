@@ -15,15 +15,15 @@ public class DiscPlanningAlgorithms {
 
 
     public int fcfsEdf() {
-        int blocks = 0;
-        int currentBlock = 0;
+        int blocks = 0;//ilosc ruchów glowicy dysku
+        int currentBlock = 0; // obecny nr ruchu glowicy
         int currentTime = 0;
-        int rejected = 0;
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> priorityTasks = new ArrayList<>();
         ArrayList<Task> waitingTasks = new ArrayList<>();
         ArrayList<Task> waitingPriorityTasks = new ArrayList<>();
 
+        //kopiujemy taski do pomocniczych list
         for (Task aTask : queue) {
             tasks.add(new Task(aTask));
         }
@@ -33,8 +33,10 @@ public class DiscPlanningAlgorithms {
 
         while (currentTime != 100000) {
 
+            //linia czasowa sie przesuwa i w ten sposob za pomoca helpMethod dodajemy zadania to list zgodnie z czasem przybycia
             helpMethod(currentTime, tasks, priorityTasks, waitingTasks, waitingPriorityTasks);
 
+            // w pierwszej kolejnosci sa wykonywane zadanie real time czyli priorytetowe
             if (waitingPriorityTasks.size() != 0) {
                 if (waitingPriorityTasks.get(0).getCylinderNumber() == currentBlock) {
                     waitingPriorityTasks.remove(0);
@@ -42,11 +44,6 @@ public class DiscPlanningAlgorithms {
 
                 waitingTasks.sort(Comparator.comparing(Task::getDeadline));
 
-                if (waitingPriorityTasks.size() != 0 && currentBlock == waitingPriorityTasks.get(0).getCylinderNumber()) {
-                    if (waitingPriorityTasks.get(0).getDeadline() < Math.abs(waitingPriorityTasks.get(0).getCylinderNumber() - currentBlock)) {
-                        rejected++;
-                    }
-                }
                 if (waitingPriorityTasks.size() != 0) {
                     if (waitingPriorityTasks.get(0).getCylinderNumber() > currentBlock) {
                         currentBlock++;
@@ -58,6 +55,7 @@ public class DiscPlanningAlgorithms {
                         waitingPriorityTask.setDeadline(waitingPriorityTask.getDeadline() - 1);
                     }
                 }
+                // tutaj wykonujemy reszte zdan bez deadline'u
             } else if (waitingTasks.size() != 0) {
                 if (currentBlock == waitingTasks.get(0).getCylinderNumber()) {
                     waitingTasks.remove(0);
@@ -81,7 +79,6 @@ public class DiscPlanningAlgorithms {
         int blocks = 0;
         int currentBlock = 0;
         int currentTime = 0;
-        int rejected = 0;
 
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> priorityTasks = new ArrayList<>();
@@ -150,7 +147,6 @@ public class DiscPlanningAlgorithms {
         int blocks = 0;
         int currentBlock = 0;
         int currentTime = 0;
-        int rejected = 0;
 
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> priorityTasks = new ArrayList<>();
@@ -174,12 +170,6 @@ public class DiscPlanningAlgorithms {
                 }
 
                 waitingPriorityTasks.sort(Comparator.comparing(Task::getDeadline));
-
-                if (waitingPriorityTasks.size() != 0 && currentBlock == waitingPriorityTasks.get(0).getCylinderNumber()) {
-                    if (waitingPriorityTasks.get(0).getDeadline() < Math.abs(waitingPriorityTasks.get(0).getCylinderNumber() - currentBlock)) {
-                        rejected++;
-                    }
-                }
 
                 if (waitingPriorityTasks.size() != 0) {
                     if (waitingPriorityTasks.get(0).getCylinderNumber() > currentBlock) {
@@ -217,7 +207,6 @@ public class DiscPlanningAlgorithms {
         int blocks = 0;
         int currentBlock = 0;
         int currentTime = 0;
-        int rejected = 0;
 
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> priorityTasks = new ArrayList<>();
@@ -242,11 +231,6 @@ public class DiscPlanningAlgorithms {
 
                 waitingPriorityTasks.sort(Comparator.comparing(Task::getDeadline));
 
-                if (waitingPriorityTasks.size() != 0 && currentBlock == waitingPriorityTasks.get(0).getCylinderNumber()) {
-                    if (waitingPriorityTasks.get(0).getDeadline() < Math.abs(waitingPriorityTasks.get(0).getCylinderNumber() - currentBlock)) {
-                        rejected++;
-                    }
-                }
 
                 if (waitingPriorityTasks.size() != 0) {
                     for (int i = 0; i < waitingPriorityTasks.size(); i++) {
@@ -289,7 +273,6 @@ public class DiscPlanningAlgorithms {
         int currentBlock = 0;
         int currentTime = 0;
         boolean forwards = true;
-        int rejected = 0;
 
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> priorityTasks = new ArrayList<>();
@@ -314,11 +297,6 @@ public class DiscPlanningAlgorithms {
 
                 waitingPriorityTasks.sort(Comparator.comparing(Task::getDeadline));
 
-                if (waitingPriorityTasks.size() != 0 && currentBlock == waitingPriorityTasks.get(0).getCylinderNumber()) {
-                    if (waitingPriorityTasks.get(0).getDeadline() < Math.abs(waitingPriorityTasks.get(0).getCylinderNumber() - currentBlock)) {
-                        rejected++;
-                    }
-                }
                 if (waitingPriorityTasks.size() != 0) {
                     if (waitingPriorityTasks.get(0).getCylinderNumber() > currentBlock) {
                         currentBlock++;
@@ -361,7 +339,6 @@ public class DiscPlanningAlgorithms {
         int currentBlock = 0;
         int currentTime = 0;
         boolean forwards = true;
-        int rejected = 0;
 
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> priorityTasks = new ArrayList<>();
@@ -385,11 +362,6 @@ public class DiscPlanningAlgorithms {
 
                 waitingPriorityTasks.sort(Comparator.comparing(Task::getDeadline));
 
-                if (waitingPriorityTasks.size() != 0 && currentBlock == waitingPriorityTasks.get(0).getCylinderNumber()) {
-                    if (waitingPriorityTasks.get(0).getDeadline() < Math.abs(waitingPriorityTasks.get(0).getCylinderNumber() - currentBlock)) {
-                        rejected++;
-                    }
-                }
                 if (waitingPriorityTasks.size() != 0) {
                     for (int i = 0; i < waitingPriorityTasks.size(); i++) {
                         waitingPriorityTasks.get(i).setDeadline(waitingPriorityTasks.get(i).getDeadline() - 1);
@@ -436,7 +408,6 @@ public class DiscPlanningAlgorithms {
         int blocks = 0;
         int currentBlock = 0;
         int currentTime = 0;
-        int rejected = 0;
 
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> priorityTasks = new ArrayList<>();
@@ -459,11 +430,6 @@ public class DiscPlanningAlgorithms {
 
                 waitingPriorityTasks.sort(Comparator.comparing(Task::getDeadline));
 
-                if (waitingPriorityTasks.size() != 0 && currentBlock == waitingPriorityTasks.get(0).getCylinderNumber()) {
-                    if (waitingPriorityTasks.get(0).getDeadline() < Math.abs(waitingPriorityTasks.get(0).getCylinderNumber() - currentBlock)) {
-                        rejected++;
-                    }
-                }
                 if (waitingPriorityTasks.size() != 0) {
                     if (waitingPriorityTasks.get(0).getCylinderNumber() > currentBlock) {
                         currentBlock++;
@@ -499,7 +465,6 @@ public class DiscPlanningAlgorithms {
         int blocks = 0;
         int currentBlock = 0;
         int currentTime = 0;
-        int rejected = 0;
 
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> priorityTasks = new ArrayList<>();
@@ -522,11 +487,6 @@ public class DiscPlanningAlgorithms {
 
                 waitingPriorityTasks.sort(Comparator.comparing(Task::getDeadline));
 
-                if (waitingPriorityTasks.size() != 0 && currentBlock == waitingPriorityTasks.get(0).getCylinderNumber()) {
-                    if (waitingPriorityTasks.get(0).getDeadline() < Math.abs(waitingPriorityTasks.get(0).getCylinderNumber() - currentBlock)) {
-                        rejected++;
-                    }
-                }
                 if (waitingPriorityTasks.size() != 0) {
                     for (int i = 0; i < waitingPriorityTasks.size(); i++) {
                         waitingPriorityTasks.get(i).setDeadline(waitingPriorityTasks.get(i).getDeadline() - 1);
