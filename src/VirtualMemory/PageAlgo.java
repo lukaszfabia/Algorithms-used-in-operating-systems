@@ -53,7 +53,7 @@ public class PageAlgo {
 
     public int random() {
         int faults = 0;
-        Queue<Integer> frames = new LinkedList<>();
+        List<Integer> frames = new LinkedList<>();
         Random rand = new Random();
 
         for (int page : pages) {
@@ -62,8 +62,7 @@ public class PageAlgo {
                     frames.add(page);
                 } else {
                     int index = rand.nextInt(numFrames);
-                    frames.remove(index);
-                    frames.add(page);
+                    frames.set(index,page);
                 }
                 faults++;
             }
@@ -72,8 +71,41 @@ public class PageAlgo {
     }
 
     public int approximateLru() {
-        //TODO
-        return 0;
+        int faults=0;
+        List<Integer> frames = new ArrayList<>(numFrames);
+        int[] bits = new int[numFrames];
+
+        for (int page : pages) {
+            int index = frames.indexOf(page);
+            if (index == -1) {
+                faults++;
+                if (frames.size() < numFrames) {
+                    frames.add(page);
+                    bits[frames.size() - 1] = 1;
+                } else {
+                    int minBits = Integer.MAX_VALUE;
+                    int minIndex = -1;
+                    for (int i = 0; i < numFrames; i++) {
+                        if (bits[i] < minBits) {
+                            minBits = bits[i];
+                            minIndex = i;
+                        }
+                    }
+                    frames.set(minIndex, page);
+                    bits[minIndex] = 1;
+                }
+            } else {
+                bits[index] = 1;
+            }
+            for (int i = 0; i < numFrames; i++) {
+                if (i != index && bits[i] > 0) {
+                    bits[i]++;
+                }
+            }
+        }
+
+        return faults;
+
     }
 
     public int optimal() {
