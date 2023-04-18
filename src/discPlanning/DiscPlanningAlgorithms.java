@@ -17,7 +17,7 @@ public class DiscPlanningAlgorithms {
     public int fcfsEdf() {
         int blocks = 0;//ilosc ruchów glowicy dysku
         int currentBlock = 0; // obecny nr ruchu glowicy
-        int currentTime = 0;
+        int currentTime = 0; //czas
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> priorityTasks = new ArrayList<>();
         ArrayList<Task> waitingTasks = new ArrayList<>();

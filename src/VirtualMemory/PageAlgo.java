@@ -32,21 +32,20 @@ public class PageAlgo {
         return faults;
     }
 
-
     public int lru() {
         int faults = 0;
         Queue<Integer> frames = new LinkedList<>();
 
         for (int page : pages) {
             if (frames.contains(page)) {
-                frames.remove(page);
+                frames.remove(page); //strona zostaje usunieta bo zawiera sie w ramce
             } else {
-                faults++;
                 if (frames.size() == numFrames) {
-                    frames.poll();
+                    frames.poll(); // jesli ramki sa pelne usuwana jest najstarsza strona
                 }
+                faults++;
             }
-            frames.offer(page);
+            frames.offer(page); //dodanie strony na koniec kolejki
         }
         return faults;
     }
@@ -55,16 +54,18 @@ public class PageAlgo {
         int faults = 0;
         List<Integer> frames = new LinkedList<>();
         Random rand = new Random();
+        int index;
 
         for (int page : pages) {
+            //jesli strona jest w pamieci idziemy do kolejnego elementu
             if (!frames.contains(page)) {
                 if (frames.size() < numFrames) {
-                    frames.add(page);
+                    frames.add(page); // jesli jest miejsce dodajemy strone
                 } else {
-                    int index = rand.nextInt(numFrames);
+                    index = rand.nextInt(numFrames); // jesli tego miejsca nie ma to wybieramy randomowy indeks
                     frames.set(index,page);
                 }
-                faults++;
+                faults++; // licznik bledow i tak jest zwiekszany jesli jest jakas operacja na liscie
             }
         }
         return faults;
@@ -74,17 +75,18 @@ public class PageAlgo {
         int faults=0;
         List<Integer> frames = new ArrayList<>(numFrames);
         int[] bits = new int[numFrames];
-
+        int index;
         for (int page : pages) {
-            int index = frames.indexOf(page);
-            if (index == -1) {
+            index = frames.indexOf(page);
+            if (index == -1) { // jesli nie ma takiej strony
                 faults++;
                 if (frames.size() < numFrames) {
                     frames.add(page);
-                    bits[frames.size() - 1] = 1;
+                    bits[frames.size() - 1] = 1; // ustawiamy bit odniesienia
                 } else {
                     int minBits = Integer.MAX_VALUE;
                     int minIndex = -1;
+                    //szukamy min obu zmiennych powyzej
                     for (int i = 0; i < numFrames; i++) {
                         if (bits[i] < minBits) {
                             minBits = bits[i];
@@ -95,8 +97,9 @@ public class PageAlgo {
                     bits[minIndex] = 1;
                 }
             } else {
-                bits[index] = 1;
+                bits[index] = 1; // ustawiamy juz istniejacym strona bit odniesienia
             }
+            //bit odniesienia jest inkrementowany dla strony obecenie odwiedzanej
             for (int i = 0; i < numFrames; i++) {
                 if (i != index && bits[i] > 0) {
                     bits[i]++;
@@ -118,7 +121,7 @@ public class PageAlgo {
                 if (frames.size() < numFrames) {
                     frames.add(page);
                 } else {
-                    furthestPage = findFurthestPage(i, pages, frames);
+                    furthestPage = findFurthestPage(i, pages, frames); // ustawiamy najdluzej niepotrzebna strone
                     frames.remove(Integer.valueOf(furthestPage));
                     frames.add(page);
                 }
@@ -131,8 +134,9 @@ public class PageAlgo {
     private int findFurthestPage(int startIndex, int[] pages, List<Integer> frames) {
         int furthestPage = -1;
         int furthestIndex = -1;
+        int index;
         for (int frame : frames) {
-            int index = findNextIndex(startIndex, pages, frame);
+            index = findNextIndex(startIndex, pages, frame); // szukamy ta metoda pierwszego wystąpienia strony
             if (index > furthestIndex) {
                 furthestIndex = index;
                 furthestPage = frame;
