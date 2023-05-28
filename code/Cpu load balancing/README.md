@@ -1,68 +1,68 @@
-## Symulacja rozproszonego algorytmu równoważącego obciążenie procesorów. ##
+## Simulation of a distributed CPU load balancing algorithm. ##
 
-### [Opis problemu](https://www.ii.pwr.edu.pl/~juszczyszyn/so.htm) ###
+### [Problem description](https://www.ii.pwr.edu.pl/~juszczyszyn/so.htm) ###
 
-_W systemie pracuje N identycznych procesorów. Na każdym z nich pojawiają się nowe zadania, z **_różną_**
-częstotliwością i **_różnymi_** wymaganiami (każde zadanie potrzebuje jakiejś mocy obliczeniowej) . Symulujemy
-następujące strategie przydziału zadań:_
+_There are N identical processors in the system. New tasks appear on each of them, with **_different_**
+frequency and **_different_** requirements (each task needs some computing power) . We simulate
+the following assignment strategies:_
 
-**Na danym procesorze pojawia się zadanie. Następnie:**
+**The job appears on the given processor. Then:**
 
-* Dane cpu pyta się losowego procesora o aktualne obciążenie:
+* cpu data asks random cpu for current load:
 
-    * Jeśli jest mniejsze od progu p, proces jest tam wysyłany.
+     * If it is less than the p threshold, the process is sent there.
 
-    * Jeśli nie, losujemy i pytamy następny, próbując co najwyżej z razy.
+     * If not, we draw and ask the next one, trying at most times.
 
-    * Jeśli wszystkie wylosowane są obciążone powyżej p, proces wykonuje się na danym procesorze.
-
-
-* Jesli obciążenie danego cpu przekracza wartość progową p, proces zostaje wysłany na losowo wybrany inny procesor o
-  obciążeniu mniejszym od p (jeśli wylosowany y ma obc.>p, losowanie powtarza się do skutku). Jeśli nie przekracza -
-  proces wykonuje się na danym cpu.
+     * If all drawn are loaded above p, the process executes on that CPU.
 
 
-* Jak w pkt 2, z tym że procesory o obciążeniu mniejszym od minimalnego progu r pytają losowo wybrane procesory i jesli
-  obc. zapytanego jest większe od p, pytający przejmuje część jego zadań (założyć jaką).
-
-**Przeprowadzić symulację strategii 1-3 dla N=ok.50-100 i długiej serii zadań do wykonania (parametry dobrać
-samodzielnie, tak by całość zadziałała:). W każdym przypadku podać jako wynik:**
-
-* Średnie obciążenie procesorów.
+* If the load of a given cpu exceeds the threshold value p, the process is sent to a randomly selected other cpu o
+   load smaller than p (if the drawn y has a load>p, the draw is repeated until successful). If it does not exceed -
+   the process is running on a given cpu.
 
 
-* Średnie odchylenie od wartości z pkt A.
+* As in point 2, except that processors with a load less than the minimum threshold r ask randomly selected processors and if
+   load is greater than p, the asker takes over some of his tasks (assume what).
+
+**Simulate strategies 1-3 for N=approx. 50-100 and a long series of tasks to be performed (select parameters
+to make it all work :). In each case, give as result:**
+
+* Average CPU load.
 
 
-* Ilość zapytań o obciążenie oraz migracji zadań.
+* Average deviation from the value in point A.
 
-__Użytkownik powinien mieć możliwość podania (zmiany) wartości p, r, z, N.__
 
-### Dla jakich wartości zmiennych testować? ###
+* Number of load requests and job migrations.
 
-* **Przykładowe dane:**
+__The user should be able to specify (change) p, r, z, N values.__
 
-| Lp. | ilość zadań | max. obciążenie | ilość procesorów | max. czas fazy |  z  |  p  |  r  |
+### What variable values to test for? ###
+
+* **Example data:**
+
+| Nr. | task amount | max. load | cpu amount | max. phase length |  z  |  p  |  r  |
 |:---:|:-----------:|:---------------:|:----------------:|:--------------:|:---:|:---:|:---:|
 | 1.  |   100000    |       60        |        50        |      170       | 10  | 80  | 30  |
 | 2.  |    50000    |       90        |        70        |      200       |  4  | 70  | 10  |
 | 3.  |    1000     |       80        |        60        |      250       |  3  | 80  | 40  |
 
-* **Co oznaczają poszczególne zmienne:**
+* **What the individual variables mean:**
 
-**Maksymalne obciążenie:**
-maksymalna moc obliczeniowa jaką potrzebuje zadanie
+**Maximum load:**
+the maximum computing power the task needs
 
-**Maksymalny czas fazy:**
-maksymalny czas wykonania się zadania
+**Maximum Phase Time:**
+maximum task completion time
 
-**z:**
-ile maksymalnie razy będziemy próbali szukać procesora, który może przejąć zadanie
+**With:**
+the maximum number of times we will try to look for a processor that can take over the task
 
 **p:**
-maksymalny próg obiążenia
+maximum load threshold
 
 **r:**
-minimalny próg obiążenia
+minimum load threshold
                                                           
 
