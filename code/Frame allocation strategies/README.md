@@ -1,4 +1,4 @@
-# 4 task from Operating systems.
+# 4 task from Operational systems.
 ### Simulation includes four strategies of frame allocation. ###
 * Proportional
 * Equal
