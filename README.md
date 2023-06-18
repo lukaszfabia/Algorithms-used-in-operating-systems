@@ -1,4 +1,4 @@
-# Tasks for Operating systems class
+# Tasks for Operational systems class
 ### Topics: ###
 * [Page replacement algorithms](https://www.geeksforgeeks.org/page-replacement-algorithms-in-operating-systems/)
 * [Frame allocation](https://www.geeksforgeeks.org/operating-system-allocation-frames/)
