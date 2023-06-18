@@ -1,4 +1,4 @@
-# 1 task from Operating systems.
+# 1 task from Operational systems.
 ### Simulation of access to CPU. ###
 Simulation includes 4 strategies: 
 * [FCFS (first come first served)](https://www.geeksforgeeks.org/program-for-fcfs-cpu-scheduling-set-1/)
